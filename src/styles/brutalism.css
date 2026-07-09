@@ -1,0 +1,75 @@
+@layer components {
+  /* ── Base ─────────────────────────────────────────────── */
+  .brutal-btn-base {
+    @apply border-2 border-black transition-all duration-200;
+  }
+
+  .brutal-focus {
+    @apply focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:outline-none;
+  }
+
+  /* ── Shadow (rest / hover-off) ────────────────────────── */
+  .brutal-shadow {
+    box-shadow: var(--shadow-brutal);
+  }
+
+  .brutal-shadow-sm {
+    box-shadow: var(--shadow-brutal-sm);
+  }
+
+  /* ── Hover-off: posisi & shadow default ───────────────── */
+  .brutal-hover-off {
+    @apply translate-x-0 translate-y-0;
+  }
+
+  .brutal-hover-off.brutal-shadow {
+    box-shadow: var(--shadow-brutal);
+  }
+
+  .brutal-hover-off.brutal-shadow-sm {
+    box-shadow: var(--shadow-brutal-sm);
+  }
+
+  /* ── Hover-on: lift & shadow membesar ─────────────────── */
+  .brutal-hover-on:hover:not(:disabled) {
+    @apply -translate-x-0.5 -translate-y-0.5;
+    box-shadow: var(--shadow-brutal-hover);
+  }
+
+  /* ── Active: tekan ke bawah ───────────────────────────── */
+  .brutal-active:active:not(:disabled) {
+    @apply translate-x-0.5 translate-y-0.5 shadow-none;
+  }
+
+  /* ── Disabled: reset hover ────────────────────────────── */
+  .brutal-disabled:disabled {
+    @apply cursor-not-allowed;
+  }
+
+  .brutal-disabled:disabled:hover {
+    @apply translate-x-0 translate-y-0;
+  }
+
+  .brutal-disabled.brutal-shadow:disabled:hover {
+    box-shadow: var(--shadow-brutal);
+  }
+
+  .brutal-disabled.brutal-shadow-sm:disabled:hover {
+    box-shadow: var(--shadow-brutal-sm);
+  }
+
+  /* ── Centered button (overlay, e.g. delete) ───────────── */
+  .brutal-hover-off-centered {
+    @apply -translate-x-1/2 -translate-y-1/2;
+    box-shadow: var(--shadow-brutal);
+  }
+
+  .brutal-hover-on-centered:hover:not(:disabled) {
+    @apply -translate-x-1/2 -translate-y-[calc(50%+2px)];
+    box-shadow: var(--shadow-brutal-hover);
+  }
+
+  .brutal-active-centered:active:not(:disabled) {
+    @apply -translate-x-1/2 -translate-y-1/2 shadow-none;
+  }
+}

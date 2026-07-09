@@ -1,8 +1,11 @@
+import { AppLayout } from "@/layouts/AppLayout";
+import { HomePage } from "@/pages/HomePage";
+
 function App() {
   return (
-    <>
-      <h1>React 19 boilerplate</h1>
-    </>
+    <AppLayout>
+      <HomePage />
+    </AppLayout>
   );
 }
 
