@@ -1,268 +1,189 @@
-# 🚀 React Vite Starter
+# ShuttDesc
 
-A scalable React starter template built with **React 19**, **TypeScript**, and **Vite**, preconfigured with modern tools and best practices for building maintainable web applications.
+**Shutterstock Description Generator** — aplikasi web untuk menghasilkan deskripsi dan keyword SEO Shutterstock dari gambar, menggunakan AI (Groq + Llama).
 
-> This repository serves as my personal boilerplate for rapidly starting new React projects with a clean architecture and production-ready setup.
-
----
-
-## ✨ Features
-
-- ⚛️ React 19
-- ⚡ Vite 8
-- 🟦 TypeScript
-- 🛣️ React Router DOM
-- 🌐 Axios
-- 🔄 TanStack Query
-- 🐻 Zustand
-- 📝 React Hook Form
-- ✅ Zod Validation
-- 🎨 Tailwind CSS *(optional)*
-- 🧹 ESLint
-- 💅 Prettier
-- 📂 Path Alias (`@`)
-- 🌱 Environment Variables
-- 📦 Axios Instance
-- 📐 Scalable Folder Structure
+Upload satu gambar, klik generate, lalu salin hasil metadata yang siap dipakai untuk listing stock photo.
 
 ---
 
-## 📁 Project Structure
+## Fitur
 
-```text
-src
-│
-├── api                 # Axios instance & API configuration
-│
-├── assets              # Images, icons, fonts
-│
-├── components
-│   ├── common          # Shared reusable components
-│   └── ui              # UI components
-│
-├── hooks               # Custom React hooks
-│
-├── layouts             # Application layouts
-│
-├── pages               # Application pages
-│
-├── providers           # Global providers
-│
-├── routes              # React Router configuration
-│
-├── services            # Business logic / API calls
-│
-├── store               # Zustand stores
-│
-├── styles              # Global styles
-│
-├── types               # Global TypeScript types
-│
-├── utils               # Helper functions
-│
-├── App.tsx
-├── main.tsx
-└── vite-env.d.ts
-```
+- Upload gambar via **klik**, **drag & drop**, atau **Ctrl+V (paste)**
+- Preview gambar (aspect ratio 16:10) dengan opsi hapus
+- Generate deskripsi + 50 keyword SEO via model vision Groq
+- Kompresi gambar otomatis sebelum dikirim ke API
+- Salin hasil ke clipboard dengan notifikasi toast (Sonner)
+- Indikator kuota harian (UI)
+- UI Neo Brutalism (Tailwind CSS + shadcn/ui)
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
-| Category | Technology |
-|----------|------------|
+| Kategori | Teknologi |
+|----------|-----------|
 | Framework | React 19 |
 | Build Tool | Vite 8 |
 | Language | TypeScript |
-| Routing | React Router |
-| HTTP Client | Axios |
-| Server State | TanStack Query |
-| Global State | Zustand |
-| Forms | React Hook Form |
-| Validation | Zod |
-| Linting | ESLint |
-| Formatting | Prettier |
+| Styling | Tailwind CSS 4, shadcn/ui |
+| AI | `@ai-sdk/groq`, Vercel AI SDK |
+| Model | `meta-llama/llama-4-scout-17b-16e-instruct` |
+| Toast | Sonner |
+| Icons | Lucide React |
+| Image | `browser-image-compression` |
 
 ---
 
-## 🚀 Getting Started
+## Cara Kerja
 
-### Clone Repository
-
-```bash
-git clone https://github.com/your-username/react-vite-starter.git
+```text
+Upload gambar
+    │
+    ▼
+Kompresi (max ~1MB / 1920px)
+    │
+    ▼
+Konversi ke Base64 data URL
+    │
+    ▼
+Kirim ke Groq (vision + prompt SEO)
+    │
+    ▼
+Tampilkan Description + Keywords
 ```
 
-### Install Dependencies
+Prompt SEO ada di `src/assets/prompts.ts`. Output yang diharapkan:
+
+```text
+Description:
+<deskripsi 200–350 karakter>
+
+Keywords:
+keyword1, keyword2, ..., keyword50
+```
+
+---
+
+## Getting Started
+
+### Prasyarat
+
+- Node.js 20+ (disarankan)
+- API key Groq ([console.groq.com](https://console.groq.com))
+
+### Instalasi
 
 ```bash
 npm install
 ```
 
-### Start Development Server
+### Environment Variables
 
-```bash
-npm run dev
-```
-
-### Build Project
-
-```bash
-npm run build
-```
-
-### Preview Build
-
-```bash
-npm run preview
-```
-
----
-
-## 🌱 Environment Variables
-
-Copy
-
-```text
-.env.example
-```
-
-to
-
-```text
-.env
-```
-
-Example:
+Buat file `.env` di root project:
 
 ```env
-VITE_API_URL=http://localhost:3000/api
+VITE_GROQ_API_KEY=gsk_your_groq_api_key_here
 ```
 
----
+> Jangan commit file `.env`. File ini sudah diabaikan di `.gitignore`.
 
-## 📦 Available Scripts
+### Jalankan Development Server
 
 ```bash
 npm run dev
 ```
 
-Run development server.
+Buka `http://localhost:5173`.
+
+### Build Production
 
 ```bash
 npm run build
-```
-
-Build production bundle.
-
-```bash
 npm run preview
 ```
 
-Preview production build.
+---
 
-```bash
-npm run lint
+## Scripts
+
+| Command | Keterangan |
+|---------|------------|
+| `npm run dev` | Menjalankan Vite dev server |
+| `npm run build` | Type-check (`tsc -b`) + build production |
+| `npm run preview` | Preview hasil build |
+| `npm run lint` | Menjalankan ESLint |
+
+---
+
+## Struktur Project
+
+```text
+src/
+├── api/                    # Axios instance (siap dipakai)
+├── assets/
+│   └── prompts.ts          # Prompt SEO Shutterstock
+├── components/
+│   ├── button/             # GenerateButton
+│   ├── header/             # Header aplikasi
+│   ├── quota/              # Kartu sisa kuota
+│   ├── result/             # ResultCard + copy
+│   ├── uploader/           # Upload, preview, placeholder
+│   └── ui/                 # Komponen shadcn (button, sonner)
+├── constants/
+│   └── quota.ts            # Limit kuota harian
+├── hooks/
+│   └── useImageUpload.ts   # State upload, drag/drop, paste
+├── layouts/
+│   └── AppLayout.tsx       # Layout + Toaster
+├── pages/
+│   └── HomePage.tsx        # Halaman utama (satu page)
+├── routes/
+│   └── AppRoutes.tsx
+├── services/
+│   └── ai.service.ts       # generateDescription()
+├── styles/
+│   └── brutalism.css       # Utility class Neo Brutalism
+├── types/
+│   └── image.ts
+├── utils/
+│   ├── copyToClipboard.ts
+│   └── imageToBase64.ts
+├── App.tsx
+└── main.tsx
 ```
 
-Run ESLint.
+---
+
+## Alur UI
+
+Urutan komponen di halaman utama:
+
+1. **Header** — judul & subtitle
+2. **Upload Card** — area upload / preview
+3. **Generate Button** — generate deskripsi (disabled jika belum ada gambar)
+4. **Quota Card** — sisa kuota harian
+5. **Result Card** — hasil generate + tombol Copy
 
 ---
 
-## 📐 Architecture
+## Catatan Penting
 
-This starter follows a layered architecture.
+### API Key di Frontend
 
-```
-Pages
-    │
-    ▼
-Components
-    │
-    ▼
-Services
-    │
-    ▼
-Axios
-    │
-    ▼
-Backend API
-```
+Saat ini `VITE_GROQ_API_KEY` dipakai langsung di browser. Cocok untuk development / penggunaan pribadi. Untuk production publik, sebaiknya pindahkan pemanggilan Groq ke backend agar key tidak terekspos.
 
-Global state is managed with Zustand, while asynchronous server state is handled by TanStack Query.
+### Format Gambar
+
+Tipe yang didukung: JPG, JPEG, PNG, WEBP, GIF.
+
+Sebelum dikirim ke model, gambar dikompres ke maksimal ~1MB dan resolusi max 1920px.
+
+### Kuota
+
+Kuota harian saat ini dikelola di sisi UI (`src/constants/quota.ts`). Belum terhubung ke backend/auth.
 
 ---
 
-## 📚 Included Configuration
+## Lisensi
 
-- React Router configured
-- Query Client Provider
-- Axios Instance
-- Path Alias (`@`)
-- TypeScript
-- ESLint
-- Prettier
-- Environment Variables
-
----
-
-## 📝 Recommended Workflow
-
-1. Create a new repository using **Use this template**
-2. Rename the project
-3. Configure `.env`
-4. Start building features
-5. Commit frequently using Conventional Commits
-
----
-
-## 🗺 Roadmap
-
-### Current
-
-- [x] React 19
-- [x] Vite 8
-- [x] TypeScript
-- [x] React Router
-- [x] Axios
-- [x] TanStack Query
-- [x] Zustand
-- [x] React Hook Form
-- [x] Zod
-- [x] ESLint
-- [x] Prettier
-
-### Planned
-
-- [ ] Authentication Example
-- [ ] Theme Provider
-- [ ] Dark Mode
-- [ ] Toast Provider
-- [ ] Error Boundary
-- [ ] Loading Component
-- [ ] Empty State Component
-- [ ] 404 Page
-- [ ] Husky + lint-staged
-- [ ] GitHub Actions CI
-- [ ] Docker Support
-- [ ] Storybook
-- [ ] Unit Testing (Vitest)
-- [ ] E2E Testing (Playwright)
-
----
-
-## 🤝 Contributing
-
-Feel free to fork this repository or open an issue if you have suggestions for improvements.
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-## ⭐ Support
-
-If you find this starter useful, consider giving it a ⭐ on GitHub.
+MIT
