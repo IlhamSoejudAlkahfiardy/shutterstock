@@ -9,7 +9,7 @@ const groq = createGroq({
   apiKey: import.meta.env.VITE_GROQ_API_KEY,
 });
 
-const prompt = prompts[0];
+const prompt = prompts[1];
 
 export async function generateDescription(image: File): Promise<string> {
   const compressed = await imageCompression(image, {
