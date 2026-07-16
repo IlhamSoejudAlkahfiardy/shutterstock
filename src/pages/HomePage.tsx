@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 
 import { GenerateButton } from "@/components/button/GenerateButton";
 import { Header } from "@/components/header/Header";
+import { InputTypeToggle } from "@/components/input/InputTypeToggle";
 // import { QuotaCard } from "@/components/quota/QuotaCard";
 import { ResultCard } from "@/components/result/ResultCard";
 import { ImageUploader } from "@/components/uploader/ImageUploader";
@@ -11,6 +12,7 @@ import {
 } from "@/constants/quota";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { generateDescription } from "@/services/ai.service";
+import type { InputType } from "@/types/input";
 
 export function HomePage() {
   const {
@@ -32,6 +34,7 @@ export function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
   const [remainingQuota, setRemainingQuota] = useState(DAILY_QUOTA_REMAINING);
+  const [inputType, setInputType] = useState<InputType>("PHOTO");
 
   const handleGenerate = useCallback(async () => {
     if (!image || isLoading || remainingQuota <= 0) return;
@@ -39,7 +42,7 @@ export function HomePage() {
     setIsLoading(true);
 
     try {
-      const description = await generateDescription(image);
+      const description = await generateDescription(image, inputType);
       setGeneratedText(description);
       setRemainingQuota((current) => Math.max(current - 1, 0));
     } catch (err) {
@@ -51,11 +54,13 @@ export function HomePage() {
     } finally {
       setIsLoading(false);
     }
-  }, [image, isLoading, remainingQuota]);
+  }, [image, inputType, isLoading, remainingQuota]);
 
   return (
     <div className="flex flex-col gap-6 sm:gap-8">
       <Header />
+
+      <InputTypeToggle value={inputType} onChange={setInputType} />
 
       <ImageUploader
         image={image}

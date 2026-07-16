@@ -2,16 +2,18 @@ import { createGroq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 import imageCompression from "browser-image-compression";
 
-import { imageToBase64, toImageDataUrl } from "@/utils/imageToBase64";
 import prompts from "@/assets/prompts";
+import type { InputType } from "@/types/input";
+import { imageToBase64, toImageDataUrl } from "@/utils/imageToBase64";
 
 const groq = createGroq({
   apiKey: import.meta.env.VITE_GROQ_API_KEY,
 });
 
-const prompt = prompts[1];
-
-export async function generateDescription(image: File): Promise<string> {
+export async function generateDescription(
+  image: File,
+  inputType: InputType,
+): Promise<string> {
   const compressed = await imageCompression(image, {
     maxSizeMB: 1,
     maxWidthOrHeight: 1920,
@@ -33,7 +35,7 @@ export async function generateDescription(image: File): Promise<string> {
         content: [
           {
             type: "text",
-            text: prompt,
+            text: inputType === 'VIDEO_FRAME' ? prompts[0] : prompts[1],
           },
           {
             type: "image",
